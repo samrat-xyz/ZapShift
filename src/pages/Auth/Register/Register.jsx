@@ -1,7 +1,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import useAuth from "../../../hooks/useAuth";
+import { Link } from "react-router";
+import SocialLogin from "../SocialLogin/SocialLogin";
 
 function Register() {
+  const { createUser } = useAuth();
   const {
     register,
     handleSubmit,
@@ -9,6 +13,13 @@ function Register() {
   } = useForm();
   const handleRegister = (data) => {
     console.log(data);
+    createUser(data.email, data.password)
+      .then((result) => {
+        console.log(result.user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <div className="card bg-base-100 w-full mx-auto max-w-sm shrink-0 shadow-2xl ">
@@ -25,7 +36,7 @@ function Register() {
             {errors.email?.type === "required" && (
               <p className="text-red-500 text-sm">
                 {" "}
-                please fill the email field
+                Email Required
               </p>
             )}
             <label className="label">Password</label>
@@ -36,7 +47,7 @@ function Register() {
               placeholder="Password"
             />
             {errors.password?.type === "required" && (
-              <p className="text-red-500 text-sm">password field not filled</p>
+              <p className="text-red-500 text-sm">Password Required</p>
             )}
             {errors.password?.type === "minLength" && (
               <p className="text-red-500 text-sm">
@@ -46,9 +57,13 @@ function Register() {
             <div>
               <a className="link link-hover">Forgot password?</a>
             </div>
-            <button className="btn btn-neutral mt-4">Login</button>
+            <button className="btn btn-neutral mt-4">Register</button>
+
+             <p className="text-center text-md font-bold mt-3">already have an account in  zapShift ? <Link className="text-secondary underline ml-1" to='/login'>Login</Link></p>
           </fieldset>
+          
         </form>
+        <SocialLogin></SocialLogin>
       </div>
     </div>
   );
